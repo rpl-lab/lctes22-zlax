@@ -10,3 +10,6 @@ hmm:
 hmm-plot:
 	zluciole -prob -n 100 -s main hmm.zls | tr -d '()' > hmm.data
 	gnuplot -p -e "plot 'hmm.data' using 1:2, '' using 1:3:4 with yerrorbars"
+
+clean:
+	rm -rf *.zci hmm.py coin.py hmm.data
