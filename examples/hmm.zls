@@ -1,0 +1,16 @@
+open Probzelus
+open Distribution
+open Infer_pf
+
+let speed = 2.0
+let noise = 4.0
+
+proba hmm  obs = x where
+  rec x = sample (gaussian (0.0 fby x, speed))
+  and () = observe (gaussian (x, noise), obs)
+
+node main () = t, obs, m, s where
+    rec t = 0. fby (t +. 0.1)
+    and obs = 10.0 *. sin(t) +. (draw (gaussian (0.0, 1.0)))
+    and x_dist = infer 1000 hmm obs
+    and m, s = stats_float x_dist

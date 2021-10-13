@@ -1,0 +1,20 @@
+open Probzelus
+open Distribution
+open Infer_pf
+
+node watch x = alarm where
+  rec automaton
+  | Wait -> do alarm = false until x then Ring
+  | Ring -> do alarm = true done
+
+proba coin obs = theta where
+    rec init theta = sample (uniform_float (0.0, 1.0))
+    and () = observe (bernoulli theta, obs)
+
+node cheater_detector x = cheater, (m, s) where
+  rec theta_dist = infer 1000 coin x
+  and m, s = stats_float theta_dist
+  and cheater = watch ((m < 0.2 || 0.8 < m) && (s < 0.01))
+
+node main () = ("cheater", cheater), ("mean", m), ("std", s) where
+    rec cheater, (m, s) = cheater_detector true
