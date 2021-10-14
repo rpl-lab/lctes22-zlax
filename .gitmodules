@@ -1,3 +1,9 @@
 [submodule "probzelus"]
 	path = probzelus
 	url = https://github.com/IBM/probzelus
+[submodule "zelus"]
+	path = zelus
+	url = https://github.com/INRIA/zelus.git
+[submodule "zlax"]
+	path = zlax
+	url = https://github.com/rpl-lab/zlax.git
