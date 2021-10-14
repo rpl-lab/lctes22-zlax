@@ -6,7 +6,7 @@ let speed = 2.0
 let noise = 4.0
 
 proba hmm  obs = x where
-  rec x = sample (gaussian (0.0 fby x, speed))
+  rec x = sample (gaussian (0.0 -> pre x, speed))
   and () = observe (gaussian (x, noise), obs)
 
 node main () = t, obs, m, s where
