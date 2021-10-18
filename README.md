@@ -11,7 +11,7 @@ Les prérequis pour l'installation de l'artefact sont :
 - [pip](https://pypi.org/project/pip/) avec la version 3.9 (ou plus récente) de Python
 
 
-Les dépendences suivantes sont contenus dans les sous-modules de cet artifact :
+Les dépendences suivantes sont contenus dans les sous-modules de cet artefact :
 - [Zelus](https://github.com/inria/zelus/tree/muf) (branche muf)
 - [ProbZelus](https://github.com/IBM/probzelus)
 - [Zlax/ProbZlax](https://github.com/rpl-lab/zlax)
@@ -75,7 +75,7 @@ $ make
 Choose one of coin, hmm, or hmm-plot.
 ```
 
-## Exemple 1: `coin`
+### Exemple 1: `coin`
 
 Le programme `coin.zls` lève une alarme si lorsqu'on détecte qu'une pièce est trop biaisée à partir d'observations statistiques.
 Dans cet exemple, on suppose que les observations sont toujours `true`/pile (l'entrée du nœud `cheater_detector` est la constante `true` dans le nœud `main`).
@@ -103,7 +103,7 @@ Pour simuler un programme probabiliste il faut préciser à `zluciole` d'utilise
 On peut ainsi lancer le programme précédent avec la commande suivante (cf. `make coin`) :
 
 ```
-$ zluciole -prob -n 20 -s main coin.zls
+$ zluciole -prob -n 10 -s main coin.zls
 (('cheater', False), ('mean', 0.6717270016670227), ('std', 0.11130374670028687))
 (('cheater', False), ('mean', 0.7557703256607056), ('std', 0.06814475357532501))
 (('cheater', False), ('mean', 0.810149610042572), ('std', 0.04151570796966553))
@@ -121,7 +121,7 @@ Au bout de 9 instants, la condition `(m < 0.2 || 0.8 < m) && (s < 0.01)` sur la 
 L'alarme `cheater` est alors levée.
 
 
-## Exemple 2 : `HMM`
+### Exemple 2 : `HMM`
 
 Le programme `hmm.zls` implémente un simple traqueur de position (à une dimension).
 À chaque instant on suppose que la position courante suit une distribution normale autour de la position précédente, et que l'observation courante suit une distribution normale autour de la position courante.
