@@ -158,4 +158,4 @@ $ zluciole -prob -n 10 -s main hmm.zls
 
 On peut ensuite rediriger cette sortie vers gnuplot pour obtenir une représentation graphique (`make hmm-plot`).
 
-![fig-hmm](./examples/fig-hmm.svg | width=150)
+<img src="./examples/fig-hmm.svg" alt="fig-hmm" width=150>
