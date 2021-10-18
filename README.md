@@ -41,8 +41,8 @@ let node main () = o where
 ```
 
 L'outil `zluciole` prend en argument le nombre d'instant à executer (option `-n`), le nœud à simuler (option `-s`) et le nom du fichier.
-Le nœud simuler doit être de type `unit -> 'a` et ne pas faire appel à des fonctions non pures (qui ne peuvent pas être compilées en JAX).
-L'outils `zluciole` imprime la sortie, une ligne par instant, sur la sortie standard.
+Le nœud à simuler doit être de type `unit -> 'a` et ne pas faire appel à des fonctions non pures (qui ne peuvent pas être compilées en JAX).
+`zluciole` imprime la sortie, une ligne par instant, sur la sortie standard.
 
 ```
 $ zluciole -n 10 -s main examples/counter.zls
@@ -62,13 +62,11 @@ WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 
 Le `WARNING` confirme l'utilisation de JAX.
 Si CUDA n'est pas installé, JAX execute le programme sur CPU.
 
-Les instructions pour installer la version de JAX compatible avec GPU sont disponibles [ici](https://github.com/google/jax#installation).
+_Remarque._ Les instructions pour installer la version de JAX compatible avec GPU sont disponibles [ici](https://github.com/google/jax#installation).
 
 ## Inférence réactive parallèle
 
 Le dossier `examples` contient les deux exemples présentés dans le papier.
-Pour simuler un programme probabiliste il faut préciser à `zluciole` d'utiliser les modules d'inférence (option `-prob`).
-
 Le `Makefile` du dossier `examples` permets d'exécuter rapidement ces exemples.
 
 ```
@@ -101,7 +99,8 @@ node main () = ("cheater", cheater), ("mean", m), ("std", s) where
     rec cheater, (m, s) = cheater_detector true
 ```
 
-On peut lancer ce programme avec la commande suivante (`make coin`) :
+Pour simuler un programme probabiliste il faut préciser à `zluciole` d'utiliser les modules d'inférence (option `-prob`).
+On peut ainsi lancer le programme précédent avec la commande suivante (cf. `make coin`) :
 
 ```
 $ zluciole -prob -n 20 -s main coin.zls
@@ -118,15 +117,14 @@ $ zluciole -prob -n 20 -s main coin.zls
 ```
 
 
-Au bout de 9 instants, la condition `(m < 0.2 || 0.8 < m) && (s < 0.01)` sur la moyenne `m` et la variance `s` de la distribution sur le biais inféré devient vraie.
+Au bout de 9 instants, la condition `(m < 0.2 || 0.8 < m) && (s < 0.01)` sur la moyenne `m` et la variance `s` de la distribution sur le biais `theta` devient vraie.
 L'alarme `cheater` est alors levée.
 
 
-## Exemple 2 : HMM
+## Exemple 2 : `HMM`
 
 Le programme `hmm.zls` implémente un simple traqueur de position (à une dimension).
 À chaque instant on suppose que la position courante suit une distribution normale autour de la position précédente, et que l'observation courante suit une distribution normale autour de la position courante.
-
 
 ```
 proba hmm  obs = x where
@@ -140,7 +138,7 @@ node main () = t, obs, m, s where
     and m, s = stats_float x_dist
 ```
 
-Comme pour le modèle précédent, on peut lancer ce programme avec la commande suivante pour obtenir à chaque instant, la date courante (incrementée de 0.1 à chaque instant), l'observation courante, la moyenne de la position estimée et sa déviation standard (`make hmm`):
+Comme pour le modèle précédent, on peut lancer ce programme avec la commande suivante pour obtenir à chaque instant, la date courante (incrementée de 0.1 à chaque instant), l'observation courante, la moyenne de la position estimée et sa déviation standard (cf. `make hmm`):
 
 ```
 $ zluciole -prob -n 10 -s main hmm.zls 
@@ -156,6 +154,6 @@ $ zluciole -prob -n 10 -s main hmm.zls
 (0.9000000953674316, 6.605088710784912, 6.298244953155518, 3.929673194885254)
 ```
 
-On peut ensuite rediriger cette sortie vers gnuplot pour obtenir une représentation graphique (`make hmm-plot`).
+On peut ensuite rediriger cette sortie vers gnuplot pour obtenir une représentation graphique (cf. `make hmm-plot`).
 
 <img src="./examples/fig-hmm.svg" alt="fig-hmm" width=500>
