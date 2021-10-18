@@ -1,6 +1,6 @@
 # Artefact JFLA 2022
 
-Cet artefact correspond l'article "Inférence Parallèle pour un Langage Réactif Probabiliste" soumis aux JFLA 2022.
+Cet artefact correspond l'article **Inférence parallèle pour un langage réactif probabiliste** soumis aux JFLA 2022.
 
 _G. Baudart, L. Mandel, M. Pouzet, R. Tekin_
 
