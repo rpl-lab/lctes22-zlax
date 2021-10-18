@@ -75,7 +75,7 @@ $ make
 Choose one of coin, hmm, or hmm-plot.
 ```
 
-### Exemple 1: `coin`
+### Exemple 1 : `coin`
 
 Le programme `coin.zls` lève une alarme si lorsqu'on détecte qu'une pièce est trop biaisée à partir d'observations statistiques.
 Dans cet exemple, on suppose que les observations sont toujours `true`/pile (l'entrée du nœud `cheater_detector` est la constante `true` dans le nœud `main`).
