@@ -67,7 +67,7 @@ _Remarque._ Les instructions pour installer la version de JAX compatible avec GP
 ## Inférence réactive parallèle
 
 Le dossier `examples` contient les deux exemples présentés dans le papier.
-Le `Makefile` du dossier `examples` permets d'exécuter rapidement ces exemples.
+Le `Makefile` du dossier `examples` permet d'exécuter rapidement ces exemples.
 
 ```
 $ cd examples
