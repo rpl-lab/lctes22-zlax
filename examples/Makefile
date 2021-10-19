@@ -1,5 +1,8 @@
-all:
-	@printf "Choose one of coin, hmm, or hmm-plot.\n"
+help:
+	@echo "Help:"
+	@echo "  make coin      # simulate the coin example"
+	@echo "  make hmm       # simulate the hmm example"
+	@echo "  make hmm-plot  # simulate the hmm example with graphical interface using gnuplot"
 
 coin:
 	zluciole -prob -n 20 -s main coin.zls

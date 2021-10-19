@@ -1,3 +1,8 @@
+help:
+	@echo "Help:"
+	@echo "  make init    # install Zelus, ProbZelus, and Zlax/ProbZlax"
+
+
 init: install_zelus install_probzelus install_zlax
 	
 install_zelus:
