@@ -12,17 +12,13 @@ This artifact contains:
 - `zelus`: a modified version of the [Zelus](https://zelus.di.ens.fr) compiler with a new JAX backend
 - `probzelus`: the original [ProbZelus](https://github.com/IBM/probzelus) runtime for OCaml
 - `zlax`: the new ProbZelus runtime for JAX
+- `examples`: some examples of ProbZelus programs.
 
 
-The following command install the Zelus, ProbZelus, and the `zlax` Python package that contains in particular the `zluciole`:
+The following commands install the ProbZelus compiler and the `zlax` Python package and allow to test the installation:
 
 ```
 $ make init
-```
-
-The following commands allow to test the installation.
-
-```
 $ probzeluc -version
 $ zluciole --help
 ```
