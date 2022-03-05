@@ -34,8 +34,8 @@ let node main () = o where
 ```
 
 The `zluciole` tool takes as argument the number of time steps to execute (the `-n` option), the node to execute (the `-s` option), and the name of the file.
-The node to execute must have type `unit -> 'a` and can only call pur functions (functions with side effects cannot be compiled into JAX).
-`zluciole` prints on the standard output the ouput of the program, one line per instant.
+The node to execute must have type `unit -> 'a` and can only call pure functions (functions with side effects cannot be compiled into JAX).
+`zluciole` prints on the standard output the ouput of the program one line per instant.
 
 ```
 $ zluciole -n 10 -s main examples/counter.zls
@@ -73,7 +73,7 @@ Help:
 
 ### Example 1 : `coin`
 
-The `coin.zls` program raises an alarm when it detects a coin which is too biased from statistical observations.
+The `coin.zls` program raises an alarm when it detects from statistical observations a coin which is too biased.
 In this example, we assume that the observations are always `true`/head (the input of the `cheater_detector` node is the contant `true` in the main node).
 
 ```
@@ -95,7 +95,7 @@ node main () = ("cheater", cheater), ("mean", m), ("std", s) where
     rec cheater, (m, s) = cheater_detector true
 ```
 
-To execute a probabilisti program, we must specify `zluciole`  to use the inference module (the `-prob` option).
+To execute a probabilistic program, we must specify to `zluciole` the use of inference module (the `-prob` option).
 The `coin` example can be executed with the following command (cf. `make coin`):
 
 ```
