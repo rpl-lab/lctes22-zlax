@@ -1,48 +1,45 @@
-# Artefact JFLA 2022
+# LCTES 2022 Artefact
 
-Cet artefact correspond l'article **Inférence parallèle pour un langage réactif probabiliste** soumis aux JFLA 2022.
-
-_G. Baudart, L. Mandel, M. Pouzet, R. Tekin_
+This artifact corresponds to the article **JAX Based Parallel Inference for Reactive Probabilistic Programming** submitted to LCTES 2022.
 
 ## Installation
 
-Les prérequis pour l'installation de l'artefact sont :
-- [opam](http://opam.ocaml.org/) avec la version 4.13.1 d'OCaml
-- [pip](https://pypi.org/project/pip/) avec la version 3.9 (ou plus récente) de Python
+The prerequisites for installing the artifact are:
+- [opam](http://opam.ocaml.org/) with OCaml version 4.13.1
+- [pip](https://pypi.org/project/pip/) with Python version 3.9 (or newer)
+
+This artifact contains:
+- `zelus`: a modified version of the [Zelus](https://zelus.di.ens.fr) compiler with a new JAX backend
+- `probzelus`: the original [ProbZelus](https://github.com/IBM/probzelus) runtime for OCaml
+- `zlax`: the new ProbZelus runtime for JAX
 
 
-Les dépendences suivantes sont contenus dans les sous-modules de cet artefact :
-- [Zelus](https://github.com/inria/zelus/tree/muf) (branche muf)
-- [ProbZelus](https://github.com/IBM/probzelus)
-- [Zlax/ProbZlax](https://github.com/rpl-lab/zlax)
+The following command install the Zelus, ProbZelus, and the `zlax` Python package that contains in particular the `zluciole`:
 
-Pour cloner le dépôt et installer toutes les dépendances :
 ```
-$ git clone --recurse-submodules https://github.com/rpl-lab/jfla22-zlax.git
 $ make init
 ```
 
-Si tout se passe bien, cette commande installe le compilateur ProbZelus et le package python zlax qui contient, en particulier, le simulateur `zluciole`.
-Les commandes suivantes permettent de tester l'installation.
+The following commands allow to test the installation.
 
 ```
 $ probzeluc -version
 $ zluciole --help
 ```
 
-## Premiers pas
+## First steps
 
-L'outil `zluciole` compile un programme ProbZelus en Python/JAX et simule son exécution.
-Par exemple le fichier `examples/counter.zls` contient un unique nœud qui implémente un simple compteur.
+The `zluciole` tool compiles a ProbZelus program in Python/JAX and drives its execution.
+For example, the  file `examples/counter.zls` contains a node that implements a counter.
 
 ```
 let node main () = o where
     rec o = 0 -> (pre o + 1)
 ```
 
-L'outil `zluciole` prend en argument le nombre d'instant à executer (option `-n`), le nœud à simuler (option `-s`) et le nom du fichier.
-Le nœud à simuler doit être de type `unit -> 'a` et ne pas faire appel à des fonctions non pures (qui ne peuvent pas être compilées en JAX).
-`zluciole` imprime la sortie, une ligne par instant, sur la sortie standard.
+The `zluciole` tool takes as argument the number of time steps to execute (the `-n` option), the node to execute (the `-s` option), and the name of the file.
+The node to execute must have type `unit -> 'a` and can only call pur functions (functions with side effects cannot be compiled into JAX).
+`zluciole` prints on the standard output the ouput of the program, one line per instant.
 
 ```
 $ zluciole -n 10 -s main examples/counter.zls
@@ -59,15 +56,15 @@ WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 
 9
 ```
 
-Le `WARNING` confirme l'utilisation de JAX.
-Si CUDA n'est pas installé, JAX execute le programme sur CPU.
+The `WARNING` confimes the use of JAX.
+If CUDA is not installed, JAX executes the program on CPU.
 
-_Remarque._ Les instructions pour installer la version de JAX compatible avec GPU sont disponibles [ici](https://github.com/google/jax#installation).
+_Remark._ The instructions to install a version of JAX compatible with GPUs are available at https://github.com/google/jax#installation.
 
-## Inférence réactive parallèle
+## Reactive and Parallel Inference
 
-Le dossier `examples` contient les deux exemples présentés dans le papier.
-Le `Makefile` du dossier `examples` permet d'exécuter rapidement ces exemples.
+The `examples` directory contains the examples presented in Sections 2 and 3.
+The `Makefile` in this directory allows to execute these examples.
 
 ```
 $ cd examples
@@ -78,10 +75,10 @@ Help:
   make hmm-plot  # simulate the hmm example with graphical interface using gnuplot
 ```
 
-### Exemple 1 : `coin`
+### Example 1 : `coin`
 
-Le programme `coin.zls` lève une alarme lorsqu'on détecte qu'une pièce est trop biaisée à partir d'observations statistiques.
-Dans cet exemple, on suppose que les observations sont toujours `true`/pile (l'entrée du nœud `cheater_detector` est la constante `true` dans le nœud `main`).
+The `coin.zls` program raises an alarm when it detects a coin which is too biased from statistical observations.
+In this example, we assume that the observations are always `true`/head (the input of the `cheater_detector` node is the contant `true` in the main node).
 
 ```
 node watch x = alarm where
@@ -102,8 +99,8 @@ node main () = ("cheater", cheater), ("mean", m), ("std", s) where
     rec cheater, (m, s) = cheater_detector true
 ```
 
-Pour simuler un programme probabiliste il faut préciser à `zluciole` d'utiliser les modules d'inférence (option `-prob`).
-On peut ainsi lancer le programme précédent avec la commande suivante (cf. `make coin`) :
+To execute a probabilisti program, we must specify `zluciole`  to use the inference module (the `-prob` option).
+The `coin` example can be executed with the following command (cf. `make coin`):
 
 ```
 $ zluciole -prob -n 10 -s main coin.zls
@@ -119,15 +116,14 @@ $ zluciole -prob -n 10 -s main coin.zls
 (('cheater', True), ('mean', 0.9166853427886963), ('std', 0.00595330772921443))
 ```
 
+After 9 time steps, the condition `(m < 0.2 || 0.8 < m) && (s < 0.01)` about the mean `m` and standard deviation `s` of the distribution on the biais `theta` becomes true.
+The alarm `cheater` is then raised.
 
-Au bout de 9 instants, la condition `(m < 0.2 || 0.8 < m) && (s < 0.01)` sur la moyenne `m` et la variance `s` de la distribution sur le biais `theta` devient vraie.
-L'alarme `cheater` est alors levée.
 
+### Example 2 : `HMM`
 
-### Exemple 2 : `HMM`
-
-Le programme `hmm.zls` implémente un simple traqueur de position (à une dimension).
-À chaque instant on suppose que la position courante suit une distribution normale autour de la position précédente, et que l'observation courante suit une distribution normale autour de la position courante.
+The `hmm.zls` program implements a simple position tracker (with one dimension).
+At each time step, we assume that the current position follows a normal distribution around the previous position, and the current obstervation follows a normal distribution around the current position.
 
 ```
 proba hmm  obs = x where
@@ -141,7 +137,8 @@ node main () = t, obs, m, s where
     and m, s = stats_float x_dist
 ```
 
-Comme pour le modèle précédent, on peut lancer ce programme avec la commande suivante pour obtenir à chaque instant, la date courante (incrementée de 0.1 à chaque instant), l'observation courante, la moyenne de la position estimée et sa déviation standard (cf. `make hmm`):
+As for the previous model, we can launch this program with the following command to obtain at each instant, the current date `t` (incremented by 0.1 at each instant), the current observation `obs`, the average `m` of the estimated position `x_dist` and its standard deviation `s` (cf .`make hmm`):
+
 
 ```
 $ zluciole -prob -n 10 -s main hmm.zls 
@@ -157,6 +154,6 @@ $ zluciole -prob -n 10 -s main hmm.zls
 (0.9000000953674316, 6.605088710784912, 6.298244953155518, 3.929673194885254)
 ```
 
-On peut ensuite rediriger cette sortie vers gnuplot pour obtenir une représentation graphique (cf. `make hmm-plot`).
+We can redirect this output to gnuplot to obtain a graphical representation (cf. `make hmm-plot`).
 
 <img src="./examples/fig-hmm.svg" alt="fig-hmm" width=500>
