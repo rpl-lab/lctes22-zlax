@@ -12,7 +12,8 @@ This artifact contains:
 - `zelus`: a modified version of the [Zelus](https://zelus.di.ens.fr) compiler with a new JAX backend
 - `probzelus`: the original [ProbZelus](https://github.com/IBM/probzelus) runtime for OCaml
 - `zlax`: the new ProbZelus runtime for JAX
-- `examples`: some examples of ProbZelus programs.
+- `examples`: some examples of ProbZelus programs
+- `zlax-benchmarks`: the benchmarks used for the evaluation.
 
 
 The following commands install the ProbZelus compiler and the `zlax` Python package and allow to test the installation:
@@ -153,3 +154,25 @@ $ zluciole -prob -n 10 -s main hmm.zls
 We can redirect this output to gnuplot to obtain a graphical representation (cf. `make hmm-plot`).
 
 <img src="./examples/fig-hmm.svg" alt="fig-hmm" width=500>
+
+# Benchmarks
+
+The directory `zlax-benchmarks` contains the benchmarks used in Section 5 of the paper for the evaluation. To reproduce the benchmarks you can execute the following commands.
+
+```
+cd zlax-benchmarks     # go to the benchmarks directory
+make zlax_build        # build all the examples
+make zlax_bench        # run the experiments and produce the data in csv file in each sub-directories
+make zlax_analyze      # analyse the csv files to produce some summary
+make -C plot zlax_all  # generate the graphs  in `plot/*.png`
+```
+
+WARNING: the execution might take several days.
+
+The scale of the experiments can be configure through makefile variables. For example the experiments can be launch for the range of 1000 to 5000 particles with only 3 runs per number of particles as follow:
+
+```
+make NUMRUNS=3 MIN=1000 MAX=5000 zlax_bench
+```
+
+The same command can be executed in any sub-directory to run only the selected example.
