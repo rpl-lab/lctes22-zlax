@@ -1,7 +1,7 @@
 help:
 	@echo "Help:"
-	@echo "  make init    # install Zelus, ProbZelus, and Zlax/ProbZlax"
-
+	@echo "  make init     # install Zelus, ProbZelus, and Zlax/ProbZlax"
+	@echo "  make -C coin  # run an example (more examples are available in the examples directory)"
 
 init: install_zelus install_probzelus install_zlax
 	
@@ -14,4 +14,5 @@ install_probzelus:
 
 install_zlax:
 	opam pin -y -k path zlax
-	pip install ./zlax
+	pip install ./zlax/zlax
+	pip install ./zlax/probzlax
