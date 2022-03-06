@@ -13,7 +13,7 @@ This artifact contains:
 - `probzelus`: the original [ProbZelus](https://github.com/IBM/probzelus) runtime for OCaml
 - `zlax`: the new ProbZelus runtime for JAX
 - `examples`: some examples of ProbZelus programs
-- `zlax-benchmarks`: the benchmarks used for the evaluation.
+- `zlax-benchmarks`: the benchmarks to compare the OCaml and JAX runtimes.
 
 
 The following commands install the ProbZelus compiler and the `zlax` Python package and allow to test the installation:
@@ -23,6 +23,16 @@ $ make init
 $ probzeluc -version
 $ zluciole --help
 ```
+
+## Relationship with the paper
+
+The `coin` example presented in Section 2 is provided in the file `examples/coin.zls` and the tracker example presented Section 3 is in the file `examples/hmm.zls`.
+
+All the JAX support for Zelus and ProbZelus is new and defined in the `zlax` directory. In particular, the node `zmap` (called `vmap` in the code) presented in Section 3 is defined in `zlax/zlax/zlax/jax.py` and the inference engines are defined in `zlax/probzlax/probzlax/infer_importance.py` and `zlax/probzlax/probzlax/infer_pf.py`.
+
+The Zelus to muF compiler with Python code generate presented in Section 4 is an extension of the [Zelus](https://github.com/INRIA/zelus) open source compiler. The complete compiler is provided in the `zelus` directory. The new addition to the compiler is mostly defined in `zelus/compiler/muf`.
+
+Finally, the benchmarks used for the evaluation in Section 5 are provided in the `zlax-benchmarks` directory.
 
 ## First steps
 
