@@ -1,4 +1,4 @@
-# LCTES 2022 Artefact
+# LCTES 2022 Artifact
 
 This artifact corresponds to the article **JAX Based Parallel Inference for Reactive Probabilistic Programming** submitted to LCTES 2022.
 
@@ -46,7 +46,7 @@ let node main () = o where
 
 The `zluciole` tool takes as argument the number of time steps to execute (the `-n` option), the node to execute (the `-s` option), and the name of the file.
 The node to execute must have type `unit -> 'a` and can only call pure functions (functions with side effects cannot be compiled into JAX).
-`zluciole` prints on the standard output the ouput of the program one line per instant.
+`zluciole` prints on the standard output the output of the program one line per instant.
 
 ```
 $ zluciole -n 10 -s main examples/counter.zls
@@ -63,7 +63,7 @@ WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 
 9
 ```
 
-The `WARNING` confimes the use of JAX.
+The `WARNING` confirms the use of JAX.
 If CUDA is not installed, JAX executes the program on CPU.
 
 _Remark._ The instructions to install a version of JAX compatible with GPUs are available at https://github.com/google/jax#installation.
@@ -85,7 +85,7 @@ Help:
 ### Example 1 : `coin`
 
 The `coin.zls` program raises an alarm when it detects from statistical observations a coin which is too biased.
-In this example, we assume that the observations are always `true`/head (the input of the `cheater_detector` node is the contant `true` in the main node).
+In this example, we assume that the observations are always `true`/head (the input of the `cheater_detector` node is the constant `true` in the main node).
 
 ```
 node watch x = alarm where
@@ -123,14 +123,14 @@ $ zluciole -prob -n 10 -s main coin.zls
 (('cheater', True), ('mean', 0.9166853427886963), ('std', 0.00595330772921443))
 ```
 
-After 9 time steps, the condition `(m < 0.2 || 0.8 < m) && (s < 0.01)` about the mean `m` and standard deviation `s` of the distribution on the biais `theta` becomes true.
+After 9 time steps, the condition `(m < 0.2 || 0.8 < m) && (s < 0.01)` about the mean `m` and standard deviation `s` of the distribution on the bias `theta` becomes true.
 The alarm `cheater` is then raised.
 
 
 ### Example 2 : `HMM`
 
 The `hmm.zls` program implements a simple position tracker (with one dimension).
-At each time step, we assume that the current position follows a normal distribution around the previous position, and the current obstervation follows a normal distribution around the current position.
+At each time step, we assume that the current position follows a normal distribution around the previous position, and the current observation follows a normal distribution around the current position.
 
 ```
 proba hmm  obs = x where
@@ -148,7 +148,7 @@ As for the previous model, we can launch this program with the following command
 
 
 ```
-$ zluciole -prob -n 10 -s main hmm.zls 
+$ zluciole -prob -n 10 -s main hmm.zls
 (0.0, -0.6177732944488525, -0.21219289302825928, 2.1207327842712402)
 (0.10000000149011612, 1.695770025253296, 0.6171027421951294, 4.265596866607666)
 (0.20000000298023224, 1.8255577087402344, 1.1918796300888062, 4.415806293487549)
@@ -173,7 +173,7 @@ The directory `zlax-benchmarks` contains the benchmarks used in Section 5 of the
 cd zlax-benchmarks     # go to the benchmarks directory
 make zlax_build        # build all the examples
 make zlax_bench        # run the experiments and produce the data in csv file in each sub-directories
-make zlax_analyze      # analyse the csv files to produce some summary
+make zlax_analyze      # analyze the csv files to produce some summary
 make -C plot zlax_all  # generate the graphs  in `plot/*.png`
 ```
 
