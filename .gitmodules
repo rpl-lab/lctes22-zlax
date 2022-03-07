@@ -7,3 +7,6 @@
 [submodule "zlax"]
 	path = zlax
 	url = https://github.com/rpl-lab/zlax.git
+[submodule "zlax-benchmarks"]
+	path = zlax-benchmarks
+	url = git@github.com:rpl-lab/zlax-benchmarks.git
