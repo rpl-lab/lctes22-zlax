@@ -13,7 +13,7 @@ This artifact contains:
 - `probzelus`: the original [ProbZelus](https://github.com/IBM/probzelus) runtime for OCaml
 - `zlax`: the new ProbZelus runtime for JAX
 - `examples`: some examples of ProbZelus programs
-- `zlax-benchmarks`: the benchmarks to compare the OCaml and JAX runtimes.
+- `zlax-benchmarks`: the benchmarks to compare the OCaml and JAX runtimes based on the original [ProbZelus benchmark](https://github.com/IBM/probzelus).
 
 
 The following commands install the ProbZelus compiler and the `zlax` Python package and allow to test the installation:
