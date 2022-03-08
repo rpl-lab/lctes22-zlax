@@ -179,6 +179,8 @@ make -C plot zlax_all  # generate the graphs  in `plot/*.png`
 
 WARNING: the execution might take several days.
 
+WARNING: you need a CUDA powered JAX installation to test the benchmarks on GPUs (see https://github.com/google/jax#installation).
+
 The scale of the experiments can be configure through makefile variables. For example the experiments can be launch for the range of 1000 to 5000 particles with only 3 runs per number of particles as follow:
 
 ```
