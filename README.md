@@ -169,11 +169,14 @@ We can redirect this output to gnuplot to visualize the results (cf. `make hmm-p
 The directory `zlax-benchmarks` contains the benchmarks used in Section 5 (Evaluation). To reproduce the benchmarks you can execute the following commands.
 
 ```
-cd zlax-benchmarks     # go to the benchmarks directory
-make zlax_build        # build all the examples
-make zlax_bench        # run the experiments and produce the data in csv file in each sub-directories
-make zlax_analyze      # analyze the csv files to produce some summary
-make -C plot zlax_all  # generate the graphs  in `plot/*.png`
+$ cd zlax-benchmarks     # go to the benchmarks directory
+$ make
+Usage:
+  make zlax_build       #  build all the examples
+  make zlax_bench       #  run the experiments and produce the data in csv file in each sub-directories
+  make zlax_analyze     #  analyze the csv files to produce some summary for zlax experiments
+  make analyze          #  analyze the csv files to produce some summary
+  make zlax_plot        #  generate the graphs  in `plot/*.png`
 ```
 
 WARNING: the execution might take several days.
@@ -183,7 +186,7 @@ WARNING: you need a CUDA powered JAX installation to test the benchmarks on GPUs
 The scale of the experiments can be configured with makefile variables. For example the experiments can be launched for 1000 to 5000 particles with only 3 runs per number of particles as follows:
 
 ```
-make NUMRUNS=3 MIN=1000 MAX=5000 zlax_bench
+$ make NUMRUNS=3 MIN=1000 MAX=5000 zlax_bench
 ```
 
 The same command can be executed in any sub-directory to run only the selected example.
