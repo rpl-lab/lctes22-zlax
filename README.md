@@ -1,6 +1,6 @@
 # LCTES 2022 Artifact
 
-This artifact corresponds to the article **JAX Based Parallel Inference for Reactive Probabilistic Programming** submitted to LCTES 2022.
+This artifact supports the article **JAX Based Parallel Inference for Reactive Probabilistic Programming** submitted to LCTES 2022.
 
 ## Installation
 
@@ -12,11 +12,11 @@ This artifact contains:
 - `zelus`: a modified version of the [Zelus](https://zelus.di.ens.fr) compiler with a new JAX backend
 - `probzelus`: the original [ProbZelus](https://github.com/IBM/probzelus) runtime for OCaml
 - `zlax`: the new ProbZelus runtime for JAX
-- `examples`: some examples of ProbZelus programs
+- `examples`: several examples of ProbZelus programs
 - `zlax-benchmarks`: the benchmarks to compare the OCaml and JAX runtimes based on the original [ProbZelus benchmark](https://github.com/IBM/probzelus).
 
 
-The following commands install the ProbZelus compiler and the `zlax` Python package and allow to test the installation:
+The following commands installs the ProbZelus compiler and the `zlax` Python package and tests the installation:
 
 ```
 $ make init
@@ -30,7 +30,7 @@ The `coin` example presented in Section 2 is provided in the file `examples/coin
 
 All the JAX support for Zelus and ProbZelus is new and defined in the `zlax` directory. In particular, the node `zmap` (called `vmap` in the code) presented in Section 3 is defined in `zlax/zlax/zlax/jax.py` and the inference engines are defined in `zlax/probzlax/probzlax/infer_importance.py` and `zlax/probzlax/probzlax/infer_pf.py`.
 
-The Zelus to muF compiler with Python code generate presented in Section 4 is an extension of the [Zelus](https://github.com/INRIA/zelus) open source compiler. The complete compiler is provided in the `zelus` directory. The new addition to the compiler is mostly defined in `zelus/compiler/muf`.
+The Zelus to Python compiler via muF presented in Section 4 is an extension of the [Zelus](https://github.com/INRIA/zelus) open source compiler. The complete compiler is provided in the `zelus` directory. The new addition to the compiler is mostly defined in `zelus/compiler/muf`.
 
 Finally, the benchmarks used for the evaluation in Section 5 are provided in the `zlax-benchmarks` directory.
 
@@ -44,7 +44,7 @@ let node main () = o where
     rec o = 0 -> (pre o + 1)
 ```
 
-The `zluciole` tool takes as argument the number of time steps to execute (the `-n` option), the node to execute (the `-s` option), and the name of the file.
+The `zluciole` tool takes as argument the number of time steps to execute (`-n` option), the node to execute (`-s` option), and the name of the file.
 The node to execute must have type `unit -> 'a` and can only call pure functions (functions with side effects cannot be compiled into JAX).
 `zluciole` prints on the standard output the output of the program one line per instant.
 
@@ -71,21 +71,21 @@ _Remark._ The instructions to install a version of JAX compatible with GPUs are 
 ## Reactive and Parallel Inference
 
 The `examples` directory contains the examples presented in Sections 2 and 3.
-The `Makefile` in this directory allows to execute these examples.
+The `Makefile` in this directory can be used to execute these examples.
 
 ```
 $ cd examples
 $ make
-Help:
-  make coin      # simulate the coin example
-  make hmm       # simulate the hmm example
-  make hmm-plot  # simulate the hmm example with graphical interface using gnuplot
+Usage:
+  make coin     #  simulate the coin example
+  make hmm      #  simulate the hmm example
+  make hmm-plot #  simulate the hmm example with graphical interface using gnuplot
+  make clean    #  cleanup
 ```
 
 ### Example 1 : `coin`
 
-The `coin.zls` program raises an alarm when it detects from statistical observations a coin which is too biased.
-In this example, we assume that the observations are always `true`/head (the input of the `cheater_detector` node is the constant `true` in the main node).
+The `coin.zls` program raises an alarm when we can be reasonably sure that an observed coin is too biased. In this example, we assume that the observations are always `true`/head (the input of the `cheater_detector` node is the constant `true` in the main node).
 
 ```
 node watch x = alarm where
@@ -106,8 +106,8 @@ node main () = ("cheater", cheater), ("mean", m), ("std", s) where
     rec cheater, (m, s) = cheater_detector true
 ```
 
-To execute a probabilistic program, we must specify to `zluciole` the use of inference module (the `-prob` option).
-The `coin` example can be executed with the following command (cf. `make coin`):
+To execute a probabilistic program, we must pass the `-prob` option to `zluciole`.
+For instance, the following command executes the `coin` example (cf. `make coin`):
 
 ```
 $ zluciole -prob -n 10 -s main coin.zls
@@ -123,13 +123,12 @@ $ zluciole -prob -n 10 -s main coin.zls
 (('cheater', True), ('mean', 0.9166853427886963), ('std', 0.00595330772921443))
 ```
 
-After 9 time steps, the condition `(m < 0.2 || 0.8 < m) && (s < 0.01)` about the mean `m` and standard deviation `s` of the distribution on the bias `theta` becomes true.
-The alarm `cheater` is then raised.
+After 9 time steps, the condition `(m < 0.2 || 0.8 < m) && (s < 0.01)` on the mean `m` and standard deviation `s` of the bias distribution becomes true and the alarm `cheater` is raised.
 
 
 ### Example 2 : `HMM`
 
-The `hmm.zls` program implements a simple position tracker (with one dimension).
+The `hmm.zls` program implements a simple 1D position tracker.
 At each time step, we assume that the current position follows a normal distribution around the previous position, and the current observation follows a normal distribution around the current position.
 
 ```
@@ -138,13 +137,13 @@ proba hmm  obs = x where
   and () = observe (gaussian (x, noise), obs)
 
 node main () = t, obs, m, s where
-    rec t = 0. fby (t +. 0.1)
-    and obs = 10.0 *. sin(t) +. (draw (gaussian (0.0, 1.0)))
-    and x_dist = infer 1000 hmm obs
-    and m, s = stats_float x_dist
+  rec t = 0. fby (t +. 0.1)
+  and obs = 10.0 *. sin(t) +. (draw (gaussian (0.0, 1.0)))
+  and x_dist = infer 1000 hmm obs
+  and m, s = stats_float x_dist
 ```
 
-As for the previous model, we can launch this program with the following command to obtain at each instant, the current date `t` (incremented by 0.1 at each instant), the current observation `obs`, the average `m` of the estimated position `x_dist` and its standard deviation `s` (cf .`make hmm`):
+As for the previous model, we can launch this program with the following command to obtain at each instant, the current date `t` (incremented by 0.1 at each instant), the current observation `obs`, and the mean `m` and standard deviation `s` of the estimated position `x_dist` (cf .`make hmm`):
 
 
 ```
@@ -161,13 +160,13 @@ $ zluciole -prob -n 10 -s main hmm.zls
 (0.9000000953674316, 6.605088710784912, 6.298244953155518, 3.929673194885254)
 ```
 
-We can redirect this output to gnuplot to obtain a graphical representation (cf. `make hmm-plot`).
+We can redirect this output to gnuplot to visualize the results (cf. `make hmm-plot`).
 
 <img src="./examples/fig-hmm.svg" alt="fig-hmm" width=500>
 
 # Benchmarks
 
-The directory `zlax-benchmarks` contains the benchmarks used in Section 5 of the paper for the evaluation. To reproduce the benchmarks you can execute the following commands.
+The directory `zlax-benchmarks` contains the benchmarks used in Section 5 (Evaluation). To reproduce the benchmarks you can execute the following commands.
 
 ```
 cd zlax-benchmarks     # go to the benchmarks directory
@@ -181,7 +180,7 @@ WARNING: the execution might take several days.
 
 WARNING: you need a CUDA powered JAX installation to test the benchmarks on GPUs (see https://github.com/google/jax#installation).
 
-The scale of the experiments can be configure through makefile variables. For example the experiments can be launch for the range of 1000 to 5000 particles with only 3 runs per number of particles as follow:
+The scale of the experiments can be configured with makefile variables. For example the experiments can be launched for 1000 to 5000 particles with only 3 runs per number of particles as follows:
 
 ```
 make NUMRUNS=3 MIN=1000 MAX=5000 zlax_bench

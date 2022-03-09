@@ -1,5 +1,5 @@
 help:
-	@echo "Help:"
+	@echo "Usage:"
 	@echo "  make init     # install Zelus, ProbZelus, and Zlax/ProbZlax"
 	@echo "  make -C coin  # run an example (more examples are available in the examples directory)"
 
