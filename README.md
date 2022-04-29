@@ -1,4 +1,4 @@
-# LCTES 2022 Artifact
+# JAX Based Parallel Inference for Reactive Probabilistic Programming: Artifact
 
 This artifact supports the article **JAX Based Parallel Inference for Reactive Probabilistic Programming** submitted to LCTES 2022. It contains:
 
@@ -6,7 +6,9 @@ This artifact supports the article **JAX Based Parallel Inference for Reactive P
 - `probzelus`: the original [ProbZelus](https://github.com/IBM/probzelus) runtime for OCaml
 - `zlax`: the new ProbZelus runtime for JAX
 - `examples`: several examples of ProbZelus programs
-- `zlax-benchmarks`: the benchmarks to compare the OCaml and JAX runtimes based on the original [ProbZelus benchmark](https://github.com/IBM/probzelus).
+- `zlax-benchmarks`: the benchmarks to compare the OCaml and JAX runtimes based on the original [ProbZelus benchmark](https://github.com/IBM/probzelus)
+- `lctes2022-paper24.pdf`: the submitted paper to [LCTES 2022](https://pldi22.sigplan.org/track/LCTES-2022)
+- `lctes22-zlax-image.tar.gz`: the saved [Docker](https://www.docker.com) image with everything installed.
 
 
 ## Relationship with the paper
@@ -17,11 +19,11 @@ All the JAX support for Zelus and ProbZelus is new and defined in the `zlax` dir
 
 The Zelus to Python compiler via muF presented in Section 4 is an extension of the [Zelus](https://github.com/INRIA/zelus) open source compiler. The complete compiler is provided in the `zelus` directory. The new addition to the compiler is mostly defined in `zelus/compiler/muf`.
 
-Finally, the benchmarks used for the evaluation in Section 5 are provided in the `zlax-benchmarks` directory. To reproduce the perfermance results, you need to have access to a GPU and install the artifact from sources.
+Finally, the benchmarks used for the evaluation in Section 5 are provided in the `zlax-benchmarks` directory. To reproduce the performance results, you need to have access to a GPU and install the artifact from sources.
 
-## Getting Started
+## Getting Started Guide
 
-The easiest way to run the artifact is to use Docker (https://www.docker.com). It has been tried with Docker Desktop 3.4.0 (engine: 20.10.7).
+The easiest way to run the artifact is to use [Docker](https://www.docker.com). It has been tried with Docker Desktop 4.7.1 (engine: 20.10.14).
 
 The following command loads the saved Docker image `lctes22-zlax-image.tar.gz`:
 
@@ -74,7 +76,26 @@ CUDA is not installed in the Docker image, JAX executes the program on CPU.
 _Remark._ The instructions to install the artifact with a version of JAX compatible with GPUs are provided bellow.
 
 
+You can also run a scaled down version of the benchmark by running the command:
+
+```
+make test_bench
+```
+
+This command compiles all the benchmarks, run them 3 times with the number of particles ranging from 100 to 500, analyze the results, and produces the graphs. WARNING: the execution is slow (about 20 minutes on our computer) and the performances results do not match the paper because the benchmarks are executed without GPUs.
+
+To open the generated results you can first copy them outside of the container by executing the following command in a terminal outside of the container and then open the `png` files in the `plot` directory:
+
+```
+docker cp $CONTAINER:/home/opam/lctes22-zlax/zlax-benchmarks/plot .
+```
+
+where `$CONTAINER` should be replace by the container name that can be obtain with the command `docker ps`.
+
+
 ## Step by Step Instructions
+
+The following instructions are assuming that you are executing a terminal in the Docker container as explain above.
 
 The `zluciole` tool compiles a ProbZelus program in Python/JAX and drives its execution.
 For example, the  file `examples/counter.zls` contains a node that implements a counter.
@@ -102,8 +123,6 @@ WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 
 8
 9
 ```
-
-### Reactive and Parallel Inference
 
 The `examples` directory contains the examples presented in Sections 2 and 3.
 The `Makefile` in this directory can be used to execute these examples.
@@ -237,3 +256,8 @@ $ probzeluc -version
 $ zluciole --help
 ```
 
+The Docker image can be recreated as follows:
+
+```
+docker build -t lctes22-zlax -f lctes22-zlax.docker .
+```
