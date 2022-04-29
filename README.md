@@ -214,7 +214,7 @@ $ zluciole -prob -n 10 -s main hmm.zls
 (0.9000000953674316, 6.605088710784912, 6.298244953155518, 3.929673194885254)
 ```
 
-We can redirect this output to gnuplot to visualize the results (cf. `make hmm-plot`).
+We can redirect this output to gnuplot to visualize the results (cf. `make hmm-plot` or `make hmm-plot-ascii` in the Docker container).
 
 <img src="./examples/fig-hmm.svg" alt="fig-hmm" width=500>
 
