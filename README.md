@@ -134,6 +134,7 @@ Usage:
   make coin     #  simulate the coin example
   make hmm      #  simulate the hmm example
   make hmm-plot #  simulate the hmm example with graphical interface using gnuplot
+  make hmm-plot-ascii	#  simulate the hmm example with ascii graphical interface using gnuplot
   make clean    #  cleanup
 ```
 
