@@ -1,7 +1,8 @@
 help:
 	@echo "Usage:"
-	@echo "  make init              # install Zelus, ProbZelus, and Zlax/ProbZlax"
-	@echo "  make -C examples coin  # run an example (more examples are available in the examples directory)"
+	@echo "  make init         # install Zelus, ProbZelus, and Zlax/ProbZlax"
+	@echo "  make test         # run an example (more examples are available in the examples directory)"
+	@echo "  make test_bench   # run a scaled down version of the benchmarks"
 
 init: install_zelus install_probzelus install_zlax install_bench
 
@@ -23,4 +24,11 @@ install_bench:
 test:
 	$(MAKE) -C examples coin
 
-.PHONY: help init install_zelus install_probzelus install_zlax install_bench test
+test_bench:
+	$(MAKE) -C zlax-benchmarks zlax_build
+	$(MAKE) -C zlax-benchmarks NUMRUNS=3 MIN=100 MAX=500 zlax_bench
+	$(MAKE) -C zlax-benchmarks zlax_analyze
+	$(MAKE) -C zlax-benchmarks zlax_plot
+
+.PHONY: help init install_zelus install_probzelus install_zlax install_bench \
+	test test_bench
