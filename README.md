@@ -1,28 +1,13 @@
 # LCTES 2022 Artifact
 
-This artifact supports the article **JAX Based Parallel Inference for Reactive Probabilistic Programming** submitted to LCTES 2022.
+This artifact supports the article **JAX Based Parallel Inference for Reactive Probabilistic Programming** submitted to LCTES 2022. It contains:
 
-## Installation
-
-The prerequisites for installing the artifact are:
-- [opam](http://opam.ocaml.org/) with OCaml version 4.13.1
-- [pip](https://pypi.org/project/pip/) with Python version 3.9 (or newer)
-
-This artifact contains:
 - `zelus`: a modified version of the [Zelus](https://zelus.di.ens.fr) compiler with a new JAX backend
 - `probzelus`: the original [ProbZelus](https://github.com/IBM/probzelus) runtime for OCaml
 - `zlax`: the new ProbZelus runtime for JAX
 - `examples`: several examples of ProbZelus programs
 - `zlax-benchmarks`: the benchmarks to compare the OCaml and JAX runtimes based on the original [ProbZelus benchmark](https://github.com/IBM/probzelus).
 
-
-The following commands installs the ProbZelus compiler and the `zlax` Python package and tests the installation:
-
-```
-$ make init
-$ probzeluc -version
-$ zluciole --help
-```
 
 ## Relationship with the paper
 
@@ -32,9 +17,64 @@ All the JAX support for Zelus and ProbZelus is new and defined in the `zlax` dir
 
 The Zelus to Python compiler via muF presented in Section 4 is an extension of the [Zelus](https://github.com/INRIA/zelus) open source compiler. The complete compiler is provided in the `zelus` directory. The new addition to the compiler is mostly defined in `zelus/compiler/muf`.
 
-Finally, the benchmarks used for the evaluation in Section 5 are provided in the `zlax-benchmarks` directory.
+Finally, the benchmarks used for the evaluation in Section 5 are provided in the `zlax-benchmarks` directory. To reproduce the perfermance results, you need to have access to a GPU and install the artifact from sources.
 
-## First steps
+## Getting Started
+
+The easiest way to run the artifact is to use Docker (https://www.docker.com). It has been tried with Docker Desktop 3.4.0 (engine: 20.10.7).
+
+The following command loads the saved Docker image `lctes22-zlax-image.tar.gz`:
+
+```
+docker load --input lctes22-zlax-image.tar.gz
+```
+
+Then you can launch a shell in the container where ProbZelus is installed as follows:
+
+```
+docker run -ti --rm lctes22-zlax bash
+```
+
+In this shell, you can compile and execute an example with:
+
+```
+make test
+```
+
+This command compiles the program `examples/coin.zls` to produce the file `examples/coin.py` which is then executed for 20 time steps. It produces the following output:
+
+```
+zluciole -prob -n 20 -s main coin.zls
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+(('cheater', False), ('mean', 0.6717269420623779), ('std', 0.11130373924970627))
+(('cheater', False), ('mean', 0.7557700872421265), ('std', 0.06814471632242203))
+(('cheater', False), ('mean', 0.8101494908332825), ('std', 0.041515689343214035))
+(('cheater', False), ('mean', 0.8406216502189636), ('std', 0.029811734333634377))
+(('cheater', False), ('mean', 0.8691132664680481), ('std', 0.019973836839199066))
+(('cheater', False), ('mean', 0.8866547346115112), ('std', 0.014147775247693062))
+(('cheater', False), ('mean', 0.8979822397232056), ('std', 0.010037769563496113))
+(('cheater', False), ('mean', 0.9038761854171753), ('std', 0.00862805638462305))
+(('cheater', True), ('mean', 0.9117443561553955), ('std', 0.0070923734456300735))
+(('cheater', True), ('mean', 0.9166853427886963), ('std', 0.005953306797891855))
+(('cheater', True), ('mean', 0.9246258735656738), ('std', 0.004949973430484533))
+(('cheater', True), ('mean', 0.9284363389015198), ('std', 0.004679297562688589))
+(('cheater', True), ('mean', 0.9336134195327759), ('std', 0.003929308149963617))
+(('cheater', True), ('mean', 0.9360647201538086), ('std', 0.003770894603803754))
+(('cheater', True), ('mean', 0.936414361000061), ('std', 0.0036349124275147915))
+(('cheater', True), ('mean', 0.9377480745315552), ('std', 0.003548545530065894))
+(('cheater', True), ('mean', 0.9395267963409424), ('std', 0.0033768112771213055))
+(('cheater', True), ('mean', 0.9412149786949158), ('std', 0.0032705666963011026))
+(('cheater', True), ('mean', 0.9443446397781372), ('std', 0.003037207294255495))
+(('cheater', True), ('mean', 0.9484158754348755), ('std', 0.0025094265583902597))
+```
+
+The `WARNING` confirms the use of JAX.
+CUDA is not installed in the Docker image, JAX executes the program on CPU.
+
+_Remark._ The instructions to install the artifact with a version of JAX compatible with GPUs are provided bellow.
+
+
+## Step by Step Instructions
 
 The `zluciole` tool compiles a ProbZelus program in Python/JAX and drives its execution.
 For example, the  file `examples/counter.zls` contains a node that implements a counter.
@@ -63,12 +103,7 @@ WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 
 9
 ```
 
-The `WARNING` confirms the use of JAX.
-If CUDA is not installed, JAX executes the program on CPU.
-
-_Remark._ The instructions to install a version of JAX compatible with GPUs are available at https://github.com/google/jax#installation.
-
-## Reactive and Parallel Inference
+### Reactive and Parallel Inference
 
 The `examples` directory contains the examples presented in Sections 2 and 3.
 The `Makefile` in this directory can be used to execute these examples.
@@ -83,7 +118,7 @@ Usage:
   make clean    #  cleanup
 ```
 
-### Example 1 : `coin`
+### Example 1: `coin`
 
 The `coin.zls` program raises an alarm when we can be reasonably sure that an observed coin is too biased. In this example, we assume that the observations are always `true`/head (the input of the `cheater_detector` node is the constant `true` in the main node).
 
@@ -126,7 +161,7 @@ $ zluciole -prob -n 10 -s main coin.zls
 After 9 time steps, the condition `(m < 0.2 || 0.8 < m) && (s < 0.01)` on the mean `m` and standard deviation `s` of the bias distribution becomes true and the alarm `cheater` is raised.
 
 
-### Example 2 : `HMM`
+### Example 2: `HMM`
 
 The `hmm.zls` program implements a simple 1D position tracker.
 At each time step, we assume that the current position follows a normal distribution around the previous position, and the current observation follows a normal distribution around the current position.
@@ -164,12 +199,12 @@ We can redirect this output to gnuplot to visualize the results (cf. `make hmm-p
 
 <img src="./examples/fig-hmm.svg" alt="fig-hmm" width=500>
 
-# Benchmarks
+### Benchmarks
 
 The directory `zlax-benchmarks` contains the benchmarks used in Section 5 (Evaluation). To reproduce the benchmarks you have to execute the following commands.
 
 ```
-$ cd zlax-benchmarks    # go to the benchmarks directory
+$ cd zlax-benchmarks    #  go to the benchmarks directory
 $ make zlax_build       #  build all the examples
 $ make zlax_bench       #  run the experiments and produce the data in csv file in each sub-directories
 $ make zlax_analyze     #  analyze the csv files to produce some summary for zlax experiments
@@ -186,3 +221,19 @@ $ make NUMRUNS=3 MIN=1000 MAX=5000 zlax_bench
 ```
 
 The same command can be executed in any sub-directory to run only the selected example.
+
+## Installation from sources
+
+The prerequisites for installing the artifact are:
+- [opam](http://opam.ocaml.org/) with OCaml version 4.13.1
+- [pip](https://pypi.org/project/pip/) with Python version 3.9 (or newer)
+- [JAX](https://github.com/google/jax) version 0.2.28 (see https://github.com/google/jax#installation for installation with GPUs)
+
+The following commands installs the ProbZelus compiler and the `zlax` Python package and tests the installation:
+
+```
+$ make init
+$ probzeluc -version
+$ zluciole --help
+```
+
