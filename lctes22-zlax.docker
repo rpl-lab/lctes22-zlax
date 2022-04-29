@@ -1,0 +1,49 @@
+############################################################
+# Dockerfile to build lctes22-zlax docker image
+# Based on the debian image from OWL and ProbZelus image
+# Build with `docker build -t lctes22-zlax -f lctes22-zlax.docker .`
+# Run with `docker run -ti --rm lctes22-zlax bash`
+# For graphics:
+#  - First run `xhost + 127.0.0.1`
+#  - Add option `-e DISPLAY=host.docker.internal:0` to `docker run`
+############################################################
+
+FROM ocaml/opam:debian-11-ocaml-4.13
+USER opam
+
+##################### PREREQUISITES ########################
+
+RUN sudo apt-get -y update && \
+    sudo apt-get -y install \
+         build-essential m4 wget unzip aspcud libshp-dev libplplot-dev gfortran pkg-config git \
+	 libpcre3-dev mingw-w64 gcc wget cmake gawk curl gnupg \
+	 gtk2.0 libgtk2.0-dev libopenblas-dev liblapacke-dev time \
+         libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev \
+	 curl llvm libncurses5-dev libncursesw5-dev \
+	 xz-utils tk-dev libffi-dev liblzma-dev
+
+##################### INSTALL PYTHON #######################
+
+RUN curl https://pyenv.run | bash && \
+    echo 'eval "$(pyenv init -)"' > /home/opam/.bashrc && \
+    echo 'eval "$(pyenv virtualenv-init -)"' > /home/opam/.bashrc
+ENV PATH "/home/opam/.pyenv/shims:/home/opam/.pyenv/bin:$PATH"
+RUN pyenv install 3.10.2 && \
+    pyenv global 3.10.2
+
+###################### INSTALL OWL #########################
+
+ENV OWLPATH /home/opam/owl
+ENV OCAMLPARAM cclib=-llapacke,_,
+WORKDIR /home/opam/opam-repository
+RUN git pull --quiet origin master \
+    && opam update -q \
+    && opam install -y graphics lablgtk owl owl-top owl-plplot \
+    && echo "#require \"owl-top\";; open Owl;;" >> /home/opam/.ocamlinit \
+    && echo 'eval $(opam env)' >> /home/opam/.bashrc
+
+################### INSTALL ARTIFACT ###################
+
+COPY --chown=opam . /home/opam/lctes22-zlax
+WORKDIR /home/opam/lctes22-zlax
+RUN make init
