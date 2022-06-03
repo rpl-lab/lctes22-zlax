@@ -18,6 +18,12 @@ install_zlax:
 	pip install ./zlax/zlax
 	pip install ./zlax/probzlax
 
+install_zlax_cuda:
+	opam pin -y -k path zlax
+	pip install "jaxlib==0.1.71" -f https://storage.googleapis.com/jax-releases/jax_releases.html
+	pip install ./zlax/zlax
+	pip install ./zlax/probzlax
+
 install_bench:
 	opam install -y csv mtime
 

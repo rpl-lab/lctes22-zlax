@@ -28,8 +28,9 @@ RUN curl https://pyenv.run | bash && \
     echo 'eval "$(pyenv init -)"' > /home/opam/.bashrc && \
     echo 'eval "$(pyenv virtualenv-init -)"' > /home/opam/.bashrc
 ENV PATH "/home/opam/.pyenv/shims:/home/opam/.pyenv/bin:$PATH"
-RUN pyenv install 3.10.2 && \
-    pyenv global 3.10.2
+RUN pyenv install 3.9.6 && \
+    pyenv global 3.9.6
+RUN pip install --upgrade pip
 
 ###################### INSTALL OWL #########################
 

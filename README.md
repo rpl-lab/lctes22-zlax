@@ -1,13 +1,13 @@
 # JAX Based Parallel Inference for Reactive Probabilistic Programming: Artifact
 
-This artifact supports the article **JAX Based Parallel Inference for Reactive Probabilistic Programming** submitted to LCTES 2022. It contains:
+This artifact supports the LCTES 2022 article **JAX Based Parallel Inference for Reactive Probabilistic Programming**. It contains:
 
 - `zelus`: a modified version of the [Zelus](https://zelus.di.ens.fr) compiler with a new JAX backend
 - `probzelus`: the original [ProbZelus](https://github.com/IBM/probzelus) runtime for OCaml
 - `zlax`: the new ProbZelus runtime for JAX
 - `examples`: several examples of ProbZelus programs
 - `zlax-benchmarks`: the benchmarks to compare the OCaml and JAX runtimes based on the original [ProbZelus benchmark](https://github.com/IBM/probzelus)
-- `lctes2022-paper24.pdf`: the submitted paper to [LCTES 2022](https://pldi22.sigplan.org/track/LCTES-2022)
+- `lctes22-zlax.pdf`: the [LCTES 2022](https://pldi22.sigplan.org/track/LCTES-2022) paper.
 - `lctes22-zlax-image.tar.gz`: the saved [Docker](https://www.docker.com) image with everything installed.
 
 
@@ -73,7 +73,7 @@ WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 
 The `WARNING` confirms the use of JAX.
 CUDA is not installed in the Docker image, JAX executes the program on CPU.
 
-_Remark._ The instructions to install the artifact with a version of JAX compatible with GPUs are provided bellow.
+_Remark._ The instructions to install the artifact with a version of JAX compatible with GPUs are provided below.
 
 
 You can also run a scaled down version of the benchmark by running the command:
@@ -221,7 +221,17 @@ We can redirect this output to gnuplot to visualize the results (cf. `make hmm-p
 
 ### Benchmarks
 
-The directory `zlax-benchmarks` contains the benchmarks used in Section 5 (Evaluation). To reproduce the benchmarks you have to execute the following commands.
+The directory `zlax-benchmarks` contains the benchmarks used in Section 5 (Evaluation).
+
+WARNING: you need a CUDA powered JAX installation to test the benchmarks on GPUs.
+In the paper we used Python 3.9 and CUDA 11.1.
+You can install the JAX version used for the benchmarks with:
+
+```
+make install_zlax_cuda
+```
+
+To reproduce the benchmarks you have to execute the following commands.
 
 ```
 $ cd zlax-benchmarks    #  go to the benchmarks directory
@@ -232,7 +242,6 @@ $ make zlax_plot        #  generate the graphs in `plot/*.png`
 ```
 
 WARNING: the execution might take several days.  
-WARNING: you need a CUDA powered JAX installation to test the benchmarks on GPUs (see https://github.com/google/jax#installation).
 
 The scale of the experiments can be configured with makefile variables. For example the experiments can be launched for 1000 to 5000 particles with only 3 runs per number of particles as follows:
 
@@ -246,8 +255,8 @@ The same command can be executed in any sub-directory to run only the selected e
 
 The prerequisites for installing the artifact are:
 - [opam](http://opam.ocaml.org/) with OCaml version 4.13.1
-- [pip](https://pypi.org/project/pip/) with Python version 3.9 (or newer)
-- [JAX](https://github.com/google/jax) version 0.2.28 (see https://github.com/google/jax#installation for installation with GPUs)
+- [pip](https://pypi.org/project/pip/) with Python version 3.9
+- [JAX](https://github.com/google/jax) version 0.2.25 (see https://github.com/google/jax#installation for installation with GPUs)
 
 The following commands installs the ProbZelus compiler and the `zlax` Python package and tests the installation:
 
@@ -261,4 +270,25 @@ The Docker image can be recreated as follows:
 
 ```
 docker build -t lctes22-zlax -f lctes22-zlax.docker .
+```
+## Integration with Python
+
+Our compiler produces valid Python code that can be embedded in an arbitrary Python script. 
+For instance, the file `counter.zls` is compiled into `counter.py` which contains a declaration for each node, e.g., `main`.
+
+```
+zeluc -jax counter.zls
+```
+
+Then in a Python script, we can execute 10 steps of node main with:
+
+```python
+from zlax.muflib import init, step
+from counter import main # import the compiled node
+
+s = init(main) # create initial state
+
+for i in range(10):
+  s, o = step(s, ())  # execute one step with input `()`
+  print(o)            # print output
 ```
