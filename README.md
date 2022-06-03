@@ -15,7 +15,7 @@ This artifact supports the LCTES 2022 article **JAX Based Parallel Inference for
 
 The `coin` example presented in Section 2 is provided in the file `examples/coin.zls` and the tracker example presented Section 3 is in the file `examples/hmm.zls`.
 
-All the JAX support for Zelus and ProbZelus is new and defined in the `zlax` directory. In particular, the node `zmap` (called `vmap` in the code) presented in Section 3 is defined in `zlax/zlax/zlax/jax.py` and the inference engines are defined in `zlax/probzlax/probzlax/infer_importance.py` and `zlax/probzlax/probzlax/infer_pf.py`.
+All the JAX support for Zelus and ProbZelus is new and defined in the `zlax` directory. In particular, the node `zmap` presented in Section 3 is defined in `zlax/zlax/zlax/jax.py` and the inference engines are defined in `zlax/probzlax/probzlax/infer_importance.py` and `zlax/probzlax/probzlax/infer_pf.py`.
 
 The Zelus to Python compiler via muF presented in Section 4 is an extension of the [Zelus](https://github.com/INRIA/zelus) open source compiler. The complete compiler is provided in the `zelus` directory. The new addition to the compiler is mostly defined in `zelus/compiler/muf`.
 
