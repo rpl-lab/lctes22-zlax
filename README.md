@@ -23,6 +23,11 @@ Finally, the benchmarks used for the evaluation in Section 5 are provided in the
 
 ## Getting Started Guide
 
+To clone this repository and its submodules use the `--recurse-submodules` option of `git clone`:
+```
+git clone --recurse-submodules https://github.com/rpl-lab/lctes22-zlax.git
+```
+
 The easiest way to run the artifact is to use [Docker](https://www.docker.com). It has been tried with Docker Desktop 4.7.1 (engine: 20.10.14).
 
 The following command loads the saved Docker image `lctes22-zlax-image.tar.gz`:
