@@ -23,12 +23,7 @@ Finally, the benchmarks used for the evaluation in Section 5 are provided in the
 
 ## Getting Started Guide
 
-To clone this repository and its submodules use the `--recurse-submodules` option of `git clone`:
-```
-git clone --recurse-submodules https://github.com/rpl-lab/lctes22-zlax.git
-```
-
-The easiest way to run the artifact is to use [Docker](https://www.docker.com). It has been tried with Docker Desktop 4.7.1 (engine: 20.10.14).
+The easiest way to run the artifact is to downlad the artifact from https://doi.org/10.1145/3462319 and to use [Docker](https://www.docker.com). It has been tried with Docker Desktop 4.7.1 (engine: 20.10.14).
 
 The following command loads the saved Docker image `lctes22-zlax-image.tar.gz`:
 
@@ -262,6 +257,11 @@ The prerequisites for installing the artifact are:
 - [opam](http://opam.ocaml.org/) with OCaml version 4.13.1
 - [pip](https://pypi.org/project/pip/) with Python version 3.9
 - [JAX](https://github.com/google/jax) version 0.2.25 (see https://github.com/google/jax#installation for installation with GPUs)
+
+To clone this repository and its submodules use the `--recurse-submodules` option of `git clone`:
+```
+$ git clone --recurse-submodules https://github.com/rpl-lab/lctes22-zlax.git
+```
 
 The following commands installs the ProbZelus compiler and the `zlax` Python package and tests the installation:
 
